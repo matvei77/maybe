@@ -219,6 +219,30 @@ Rails.application.routes.draw do
         end
       end
 
+      # Categories API
+      resources :categories, only: [:index, :show, :create, :update, :destroy] do
+        post :bootstrap, on: :collection
+      end
+
+      # Tags API
+      resources :tags, only: [:index, :show, :create, :update, :destroy]
+
+      # Merchants API (family merchants only)
+      resources :merchants, only: [:index, :show, :create, :update, :destroy]
+
+      # Transfers API
+      resources :transfers, only: [:index, :show, :create, :update, :destroy] do
+        member do
+          post :confirm
+          post :reject
+        end
+      end
+
+      # Budgets API (special param format)
+      resources :budgets, only: [:index, :show, :create, :update], param: :month_year do
+        resources :budget_categories, only: [:index, :update]
+      end
+
       # Test routes for API controller testing (only available in test environment)
       if Rails.env.test?
         get "test", to: "test#index"
